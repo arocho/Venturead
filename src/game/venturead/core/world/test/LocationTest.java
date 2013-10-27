@@ -1,4 +1,4 @@
-package game.ventureread.core.world.test;
+package game.venturead.core.world.test;
 
 import static org.junit.Assert.*;
 
