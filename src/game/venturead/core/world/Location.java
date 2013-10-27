@@ -125,33 +125,31 @@ public class Location
 	@Override
 	public String toString() {
 		
-		String strRepr = "";
-		
-		strRepr += this.name + "\n\n";
-		strRepr += this.description + "\n\n";
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(this.name+"\n\n");
+		sb.append(this.description+"\n\n");
 		
 		if(!this.connectingPaths.isEmpty()) {
 			for(Entry<Direction,Path> connectingPath : this.connectingPaths.entrySet()) {
-				strRepr += "There is a "+connectingPath.getValue()+ ", ";
-				strRepr += connectingPath.getKey().name()+" from here.\n";
+				sb.append("There is a "+connectingPath.getValue()+ ", ");
+				sb.append(connectingPath.getKey().name()+" from here.\n");
 			}
 		}
-		
-		String characterDescriptions="";
-		
+			
 		if(!this.charactersThatAreHere.isEmpty()) {
-			characterDescriptions+="You can see ";
+			sb.append("\n You can see ");
 			for(Character c : this.charactersThatAreHere) {
-				characterDescriptions+= c.toString()+", ";
+				sb.append(c.toString()+", ");
 			}
-			characterDescriptions+= "and no one else.";
+			sb.append("and no one else.\n");
 		}
 		
 		else {
-			characterDescriptions+="There is no one here.";
+			sb.append("\nThere is no one here.\n");
 		}
 		
-		return strRepr+"\n"+characterDescriptions+"\n";
+		return sb.toString();
 	}
 	
 }
