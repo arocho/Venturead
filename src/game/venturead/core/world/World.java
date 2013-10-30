@@ -1,7 +1,11 @@
 package game.venturead.core.world;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map.Entry;
 import java.util.PriorityQueue;
 
 public class World 
@@ -65,23 +69,111 @@ public class World
 		from.connectToLocation(to, throughThisDirection);
 		to.connectToLocation(from, Direction.findOppositeDirection(throughThisDirection));
 	}
-	
-	public LinkedList<Location> findPathToTargetFromLocation(Location from, Location target) {
-		// finds a sequence of Locations that connect the parameter to the target
-		// null, if none exists.  Considers the Paths between Locations, as well
-		// as whether or not the Paths are locked.
-		// uses Djikstra to compute the Route
-		
-		PriorityQueue<LinkedList<Location>> openLocations = new PriorityQueue<LinkedList<Location>>();
-		PriorityQueue<LinkedList<Location>> closedLocations = new PriorityQueue<LinkedList<Location>>();
-		
-		
-		
-		
+
+	/**
+	 * Finds a <tt>Path</tt> that connects the parameter <tt>Location</tt><i>from</i> 
+	 * to the <i>target</i><tt>Location</tt>, or null if none exists.  Considers the
+	 * available <tt>Route</tt>s between <tt>Location</tt>s, as well as whether or not
+	 * the <tt>Route</tt>s are locked.
+	 * @param start the starting <tt>Location</tt> for search
+	 * @param goal the target <tt>Location</tt> for search
+	 * @return a sequence of <tt>Location</tt>s
+	 */
+	public Path<Location> findPath(Location start, Location goal) {
+		// uses Djikstra to compute the path
+
+		PriorityQueue<Path<Location>> closedPaths = new PriorityQueue<Path<Location>>();
+		//paths that I have already explored, and don't want to explore again
+
+		PriorityQueue<Path<Location>> openPaths   = new PriorityQueue<Path<Location>>(10);
+		//paths that I'm still exploring; sorted in natural order
+
+		openPaths.add(new Path<Location>(start, 0));
+
+		Path<Location> solutionPath = null;
+		Path<Location> tempPath;
+
+		while(!openPaths.isEmpty())
+		{
+			tempPath = openPaths.poll();
+
+			//we have found the path!
+			if(tempPath.getLastItem().equals(goal)) {
+				solutionPath = tempPath;
+				break; //assign, and break
+			}
+
+			closedPaths.add(tempPath);
+			//add it to the closed paths so we don't check it again
+
+			HashMap<Direction,Route> expandedRoutes = tempPath.getLastItem().getUnlockedRoutes();
+			//find all the routes that connect to other Locations
+
+			for(Entry<Direction,Route> expandedRoute : expandedRoutes.entrySet()) {
+				Route routeInfo = expandedRoute.getValue();
+				Location expandedLocation = routeInfo.getDestination();
+				//the destination of the route is the next step to explore 
+
+				Path<Location> expandedPath = new Path<Location>(tempPath.append(expandedLocation), tempPath.pathCost++);
+				//the expanded path is the old path, expanded by 1, and with its cost also incremented by 1.
+				//admittedly, the increase cost of 1 is arbitrary, but since we're exploring by 1, it makes sense
+
+
+				Path<Location> repeatedPath = null;
+
+				repeatedPath = findPathWithEndLocation(expandedPath.getLastItem(), closedPaths);
+				if(repeatedPath != null) {
+
+					//this really shouldn't happen...but if it does, it means we
+					//expanded into a path whose last Location was explored by a
+					//(closed) previous path.  
+
+					//let's check if the expanded path is cheaper.
+					if(expandedPath.pathCost < repeatedPath.pathCost) {
+						closedPaths.remove(repeatedPath);
+						//if it's cheaper, then we need to consider it again!
+					}						
+				}
+
+				repeatedPath = findPathWithEndLocation(expandedPath.getLastItem(), openPaths);
+				if(repeatedPath != null) {
+
+					//this can legitimately happen for arbitrary graphs:
+					//we could find a path whose last Location matches another
+					//(yet to be explored) path.
+
+					//let's check if the expanded path is cheaper.
+					if(expandedPath.pathCost < repeatedPath.pathCost) {
+						openPaths.remove(repeatedPath);
+						//if it's cheaper, then we need to consider the cheaper one only!
+					}
+				}
+
+				//this sorts the nodes from smallest to largest!
+				openPaths.add(expandedPath);
+			}
+		}
+		return solutionPath;
+	}
+
+	/**
+	 * Searches for and returns the first <tt>Path</tt> found within <i>collectionOfPaths</i>, 
+	 * whose last <tt>Location</tt> matches <i>endLocationToMatch</i>.  If no such <tt>Path</tt>
+	 * is found, this method returns <tt>null</tt>. 
+	 * @param endLocationToMatch the <tt>Location</tt> to find within <i>collectionOfPaths</i>
+	 * @param collectionOfPaths the <tt>Collection</tt> to search
+	 * @return the first <tt>Path</tt> whose last element is <i>endLocationToMatch</i> 
+	 */
+	private Path<Location> findPathWithEndLocation(Location endLocationToMatch, Collection<Path<Location>> collectionOfPaths) {
+		for(Path<Location> path : collectionOfPaths) {
+			if(path.getLastItem().equals(endLocationToMatch)) {
+				return path;
+			}
+		}
+
 		return null;
 	}
-	
-	
+
 
 	@Override
 	public String toString() {
