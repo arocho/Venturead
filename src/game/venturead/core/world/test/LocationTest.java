@@ -21,10 +21,10 @@ public class LocationTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		house  = Location.newLocation("The House", "You see a quaint house, with tons of knickknacks.");
+		house  = Location.newLocation("The House", "A quaint house, with tons of knickknacks.");
 		houseClone = Location.newLocation("The House", "This is a clone of the house, but it is equal to it.");
-		attic  = Location.newLocation("The Attic", "You see a grue!  Run!");
-		garden = Location.newLocation("The Garden", "You see a beautiful colorful garden.");
+		attic  = Location.newLocation("The Attic", "A grue!  Run!");
+		garden = Location.newLocation("The Garden", "A beautiful colorful garden.");
 		
 		house.connectToLocation(attic, Direction.UP);
 		house.connectToLocation(garden, Direction.EAST);
@@ -42,7 +42,6 @@ public class LocationTest {
 		
 		assertEquals("Houses with equal names should produce the same hash", house.hashCode(), houseClone.hashCode());
 		
-		Random r = new Random(System.currentTimeMillis()+System.nanoTime()); 
 		RandomStringUtils.random(7, true, false);
 		String[] randomNames = new String[10000];
 		

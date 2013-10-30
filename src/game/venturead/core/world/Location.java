@@ -64,12 +64,10 @@ public class Location
 	
 	/**
 	 * Connects this <tt>Location</tt> to the other, by way of a 
-	 * <tt>OneWayPath</tt> or <tt>TwoWayPath</tt> at the given <tt>Direction</tt>.
+	 * <tt>Path</tt> at the given <tt>Direction</tt>.
 	 * @param other the other <tt>Location</tt> to connect to
-	 * @param isOneWay whether or not the path is one way
 	 * @param direction the <tt>Direction</tt> of the <tt>Path</tt> relative to the <tt>Location</tt>
-	 * @see <tt>OneWayPath.java</tt>
-	 * @see <tt>TwoWayPath.java</tt>
+	 * @see <tt>Path.java</tt>
 	 */
 	public void connectToLocation(Location other, Direction direction) {
 		Path newPath = new Path(this, other);
@@ -128,7 +126,7 @@ public class Location
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(this.name+"\n\n");
-		sb.append(this.description+"\n\n");
+		sb.append("You see "+this.description+"\n\n");
 		
 		if(!this.connectingPaths.isEmpty()) {
 			for(Entry<Direction,Path> connectingPath : this.connectingPaths.entrySet()) {
