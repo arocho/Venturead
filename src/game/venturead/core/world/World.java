@@ -1,6 +1,8 @@
 package game.venturead.core.world;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
 
 public class World 
 {
@@ -49,10 +51,10 @@ public class World
 	}
 
 	/**
-	 * Creates a Path from one <tt>Location</tt> to another <tt>Location</tt>.
+	 * Creates a Route from one <tt>Location</tt> to another <tt>Location</tt>.
 	 * The parameter <i>throughThisDirection</i> refers to the <tt>Direction</tt>
 	 * of the <tt>Location</tt> <i>to</i> relative to <tt>Location</tt> <i>from</i>.
-	 * This method creates a <tt>Path</tt> both ways (from <i>from</i> to <i>to</i>,
+	 * This method creates a <tt>Route</tt> both ways (from <i>from</i> to <i>to</i>,
 	 * and from <i>to</i> to <i>from</i>).
 	 * 
 	 * @param from a <tt>Location</tt>
@@ -63,6 +65,23 @@ public class World
 		from.connectToLocation(to, throughThisDirection);
 		to.connectToLocation(from, Direction.findOppositeDirection(throughThisDirection));
 	}
+	
+	public LinkedList<Location> findPathToTargetFromLocation(Location from, Location target) {
+		// finds a sequence of Locations that connect the parameter to the target
+		// null, if none exists.  Considers the Paths between Locations, as well
+		// as whether or not the Paths are locked.
+		// uses Djikstra to compute the Route
+		
+		PriorityQueue<LinkedList<Location>> openLocations = new PriorityQueue<LinkedList<Location>>();
+		PriorityQueue<LinkedList<Location>> closedLocations = new PriorityQueue<LinkedList<Location>>();
+		
+		
+		
+		
+		return null;
+	}
+	
+	
 
 	@Override
 	public String toString() {

@@ -1,24 +1,24 @@
 package game.venturead.core.world;
 
 /**
- * A <tt>Path</tt> represents a connection between two <tt>Location</tt>s,
+ * A <tt>Route</tt> represents a connection between two <tt>Location</tt>s,
  * that is traversable in <b>one way</b>.  Paths can be locked or unlocked. 
  * @author recardona
  */
-public class Path {
+public class Route {
 
 	private boolean isLocked;
 	private Location source;
 	private Location destination;
 
 	/**
-	 * Creates a <tt>Path</tt> from the <i>source</i> <tt>Location</tt>
+	 * Creates a <tt>Route</tt> from the <i>source</i> <tt>Location</tt>
 	 * to the <i>destination</i>
 	 * @param source one <tt>Location</tt>
 	 * @param destination another <tt>Location</tt>
 	 * @throws <tt>IllegalArgumentException</tt> if <i>source</i> and <i>destination</i> are the same
 	 */
-	public Path(Location source, Location destination) {
+	public Route(Location source, Location destination) {
 		if(source.equals(destination)) {
 			throw new IllegalArgumentException("Locations cannot be connected to themselves.");
 		}
@@ -36,7 +36,7 @@ public class Path {
 	}
 
 	/**
-	 * Toggles this <tt>Path</tt>'s lock
+	 * Toggles this <tt>Route</tt>'s lock
 	 */
 	public void toggleLock() {
 		this.isLocked = !this.isLocked;
@@ -74,9 +74,9 @@ public class Path {
 		// Two Paths are equal if their connecting endpoints 
 		// (source and destination, regardless of which is which) 
 		if(obj == null) {return false;}
-		else if(!(obj instanceof Path)) {return false;}
+		else if(!(obj instanceof Route)) {return false;}
 		else {
-			Path other = (Path) obj;
+			Route other = (Route) obj;
 			if(this.hashCode() != other.hashCode()) {return false;}
 		}
 
