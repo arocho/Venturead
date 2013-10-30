@@ -5,16 +5,16 @@ import java.util.HashSet;
 public class World 
 {
 	private HashSet<Location> worldLocations;
-		//locations must be unique, hashset provides O(1) basic operations
-	
+	//locations must be unique, hashset provides O(1) basic operations
+
 	private HashSet<Character> worldCharacters;
-		//characters must be unique!
-	
+	//characters must be unique!
+
 	public World() {
 		worldLocations  = new HashSet<Location>();
 		worldCharacters = new HashSet<Character>(); 
 	}
-	
+
 	/**
 	 * @return the worldLocations
 	 */
@@ -43,11 +43,11 @@ public class World
 		if(worldLocations.contains(newLocation)) {
 			throw new IllegalArgumentException("There has already been a location registered with name "+name);
 		}
-		
+
 		worldLocations.add(newLocation);
 		return newLocation;
-	}	
-	
+	}
+
 	/**
 	 * Creates a Path from one <tt>Location</tt> to another <tt>Location</tt>.
 	 * The parameter <i>throughThisDirection</i> refers to the <tt>Direction</tt>
@@ -63,17 +63,17 @@ public class World
 		from.connectToLocation(to, throughThisDirection);
 		to.connectToLocation(from, Direction.findOppositeDirection(throughThisDirection));
 	}
-	
+
 	@Override
 	public String toString() {
-		
+
 		StringBuilder sb = new StringBuilder();
-		
+
 		for(Location location : worldLocations) {
 			sb.append(location.toString());
 		}
-		
+
 		return sb.toString();
 	}
-	
+
 }
