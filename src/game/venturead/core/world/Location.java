@@ -102,31 +102,12 @@ public class Location
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
-		// Two Locations are equal if their names are equal.
-		if(obj == null) {return false;}
-		else if(!(obj instanceof Location)) {return false;}
-		else {
-			Location other = (Location) obj;
-			if(this.hashCode() != other.hashCode()) {return false;}
-		}
-		return true;
-	}
-	
-	@Override
-	public int hashCode() {
-		int hash = 1;
-        hash = hash * 17 * 13 * 31+ this.name.hashCode();
-		return hash;
-	}
-	
-	@Override
 	public String toString() {
 		
 		StringBuilder sb = new StringBuilder();
 
-		sb.append(this.name+"\n\n");
-		sb.append("You see "+this.description+"\n\n");
+		sb.append(this.name+"\n");
+		sb.append("You see "+this.description+"\n");
 		
 		if(!this.connectingPaths.isEmpty()) {
 			for(Entry<Direction,Path> connectingPath : this.connectingPaths.entrySet()) {
@@ -144,10 +125,28 @@ public class Location
 		}
 		
 		else {
-			sb.append("\nThere is no one here.\n");
+			sb.append("There is no one here.\n\n");
 		}
 		
 		return sb.toString();
+	}
+	
+	@Override
+	public int hashCode() {
+		int hash = 17 * 13 * 31+ this.name.hashCode();
+		return hash;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		// Two Locations are equal if their names are equal.
+		if(obj == null) {return false;}
+		else if(!(obj instanceof Location)) {return false;}
+		else {
+			Location other = (Location) obj;
+			if(this.hashCode() != other.hashCode()) {return false;}
+		}
+		return true;
 	}
 	
 }
