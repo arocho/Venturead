@@ -14,14 +14,14 @@ public class Location
 {
 	private String name;
 	private String description;
-	private HashMap<Direction,Path> connectingPaths;
+	private HashMap<Direction,Route> connectingRoutes;
 	private ArrayList<Character> charactersThatAreHere;
 	
-	private Location(String name, String description, HashMap<Direction,Path> paths, ArrayList<Character> characters)
+	private Location(String name, String description, HashMap<Direction,Route> routes, ArrayList<Character> characters)
 	{
 		this.name = name;
 		this.description = description;
-		this.connectingPaths = paths;
+		this.connectingRoutes = routes;
 		this.charactersThatAreHere = characters;
 	}
 
@@ -37,10 +37,24 @@ public class Location
 	}
 
 	/**
-	 * @return the connectingPaths
+	 * @return the connectingRoutes
 	 */
-	public HashMap<Direction,Path> getConnectingPaths() {
-		return this.connectingPaths;
+	public HashMap<Direction,Route> getConnectingRoutes() {
+		return this.connectingRoutes;
+	}
+	
+	/**
+	 * @return the <tt>HashMap</tt> of <tt>Route</tt>s that are unlocked from this <tt>Location</tt>
+	 */
+	public HashMap<Direction,Route> getUnlockedRoutes() {
+		HashMap<Direction,Route> connectingRoutes = this.getConnectingRoutes();
+		for(Entry<Direction,Route> routeInformation : connectingRoutes.entrySet()) {
+			if(routeInformation.getValue().isLocked())
+				connectingRoutes.remove(routeInformation.getKey());
+			//remove from connecting Routes all those that are locked
+		}
+		
+		return connectingRoutes;
 	}
 
 	/**
@@ -59,27 +73,29 @@ public class Location
 	 * @return the newly created <tt>Location</tt>
 	 */
 	public static Location newLocation(String name, String description) {
-		return new Location(name, description, new HashMap<Direction,Path>(), new ArrayList<Character>());
+		return new Location(name, description, new HashMap<Direction,Route>(), new ArrayList<Character>());
 	}
 	
 	/**
 	 * Connects this <tt>Location</tt> to the other, by way of a 
-	 * <tt>Path</tt> at the given <tt>Direction</tt>.
+	 * <tt>Route</tt> at the given <tt>Direction</tt>.
 	 * @param other the other <tt>Location</tt> to connect to
-	 * @param direction the <tt>Direction</tt> of the <tt>Path</tt> relative to the <tt>Location</tt>
-	 * @see <tt>Path.java</tt>
+	 * @param direction the <tt>Direction</tt> of the <tt>Route</tt> relative to the <tt>Location</tt>
+	 * @see <tt>Route.java</tt>
 	 */
 	public void connectToLocation(Location other, Direction direction) {
-		Path newPath = new Path(this, other);
+		Route newPath = new Route(this, other);
 
-		if(connectingPaths.containsKey(direction)) {
-			throw new IllegalArgumentException("A Path at given Direction " +direction.name()+" has already been registered.");
+		if(connectingRoutes.containsKey(direction)) {
+			throw new IllegalArgumentException("A Route at given Direction " +direction.name()+" has already been registered.");
 		}
 		
 		else {
-			connectingPaths.put(direction, newPath);
+			connectingRoutes.put(direction, newPath);
 		}
 	}
+	
+	
 	
 	/**
 	 * Registers the parameter <tt>Character</tt> to this <tt>Location</tt>
@@ -109,8 +125,8 @@ public class Location
 		sb.append(this.name+"\n");
 		sb.append("You see "+this.description+"\n");
 		
-		if(!this.connectingPaths.isEmpty()) {
-			for(Entry<Direction,Path> connectingPath : this.connectingPaths.entrySet()) {
+		if(!this.connectingRoutes.isEmpty()) {
+			for(Entry<Direction,Route> connectingPath : this.connectingRoutes.entrySet()) {
 				sb.append("There is a "+connectingPath.getValue()+ ", ");
 				sb.append(connectingPath.getKey().name()+" from here.\n");
 			}
